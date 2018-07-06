@@ -1,0 +1,24 @@
+The standard Environment function GetResourceName() return the bot name (system name provided at windows operating system level).
+
+
+When executed from process/object studio, the bot (resource) name will be suffixed with "_debug"; but when executed from Control Room there will not be any suffix to the system name.  
+
+The resource name has been set as output parameter (in End stage) of the page "Find Resource".  Publish the process, and run the same from Control Room.  Right click in control room and see logs.  Click on the View link to see the data processed by Input & Output params (Start & End).
+
+Another way to fine the bot name is to use "Get Machine Name" action of "Utility - Environment".  This will give the machine name without the "_debug" suffix.
+
+===================================
+
+While accessing an application in a process, and the process is executed from multiple bots; all the bots will use the same credential.  This will become a problem, because applications usually do not allow the same user to sign-in simultaneously from multiple systems.
+
+The solution for this is as below:
+
+Say 2 bots are being used, and each bot/system named as SYS1 & SYS2 (these are the names given to a systems at window operating system level).  Then two credentials will be created in Blue Prism with system name as prefix for each credential name.
+
+Usually credential names will have the notation <system name>_<application name>_USER.
+
+Eg:   SYS1_BOM_USER   &  SYS2_BOM_USER  each having a different username & password combination.
+
+For each of the credentials access-rights will have to be assigned for the respective bots (resoruces) apart from the roles & processes.
+
+In the process take a calculation stage use the inbuilt function GetResourceName (under Environment node) to get the name of the resource (bot / system) on which the process is currently getting executed, append that resource name as prefix to "BOM_USER" and then pass it to "Get" action of "Credentials" internal business object.  Then each bot will pick a different credential.
